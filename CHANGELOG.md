@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.3] - 2025-06-10
+- Add README.md file
+
 ## [1.0.2] - 2025-06-10
 - Versioning using CHANGELOG.md file
 
