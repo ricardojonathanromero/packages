@@ -1,6 +1,6 @@
 {
   "name": "@ricardojonathanromero/packages",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Statistics and Graphs with NodeJS",
   "main": "index.js",
   "scripts": {
