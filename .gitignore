@@ -1,5 +1,4 @@
 .idea
 .vscode
 packages.iml
-package-lock.json
 node_modules
