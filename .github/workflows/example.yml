@@ -16,6 +16,17 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@v4
 
+      - name: Extract version from CHANGELOG.md
+        id: extract_version
+        run: |
+          version=$(grep -Eo '## \[[0-9]+\.[0-9]+\.[0-9]+\]' CHANGELOG.md | head -1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
+          echo "version=$version" >> "$GITHUB_ENV"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Update package.json version
+        run: |
+          jq --arg v "${{ steps.extract_version.outputs.version }}" '.version=$v' package.json > tmp.json && mv tmp.json package.json
+
       - name: Configure .npmrc
         uses: actions/setup-node@v4
         with:
