@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.5] - 2025-06-10
+- Fix Dockerfile
+
 ## [1.0.4] - 2025-06-10
 - Publish package in GitHub Package OCI
 
