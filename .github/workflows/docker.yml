@@ -1,0 +1,46 @@
+name: Docker runner
+
+on:
+  push:
+    branches:
+      - docker
+
+jobs:
+  publish_package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from CHANGELOG.md
+        id: extract_version
+        run: |
+          version=$(grep -Eo '## \[[0-9]+\.[0-9]+\.[0-9]+\]' CHANGELOG.md | head -1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
+          echo "version=$version" >> "$GITHUB_ENV"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Update package.json version
+        run: |
+          jq --arg v "${{ steps.extract_version.outputs.version }}" '.version=$v' package.json > tmp.json && mv tmp.json package.json
+
+      - name: Build and tag Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository }}
+          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ steps.extract_version.outputs.version }} .
+
+      - name: Push Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository }}
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:${{ steps.extract_version.outputs.version }}
