@@ -24,7 +24,7 @@ jobs:
           scope: '@ricardojonathanromero'
 
       - name: Install dependencies
-        run: npm cli
+        run: npm ci
 
       - name: Publish to GitHub Packages
         run: npm publish
